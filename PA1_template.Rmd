@@ -7,19 +7,58 @@ output:
 
 
 ## Loading and preprocessing the data
+#setwd("C:/rafamonge/RepData_PeerAssessment1")
+library(dplyr)
+library(ggplot2)
+library(caret)
+library(RANN)
+library(gridExtra)
 
 
+data <- read.csv("activity.csv")
+data$date <- as.Date(data$date, "%Y-%m-%d")
+data$weekday <- weekdays(data$date)
+data$weekend <- data$weekday %in% c("Saturday", "Sunday")
 
 ## What is mean total number of steps taken per day?
 
-
+groupedByDay <- data %>% group_by(date) %>% summarize (total = sum(steps, na.rm =TRUE))
+hist1<-ggplot(groupedByDay, aes(total)) + geom_histogram()
+hist1
+mn <- mean(groupedByDay$total, na.rm =TRUE)
+md <- median(groupedByDay$total, na.rm =TRUE) 
 
 ## What is the average daily activity pattern?
 
+byInterlval <-data %>% group_by(interval) %>% summarize(avg = mean(steps, na.rm=TRUE)) %>% arrange(desc(avg))
+ggplot(byInterlval, aes(interval, avg)) + geom_line() +
+   xlab("interval") + ylab("average steps")
 
 
+Max <- byInterlval[1,]
 ## Imputing missing values
+
+pp<- preProcess(data, method="medianImpute")
+medianImpute <-predict(pp, data)$steps
+dataMedianImpute <- data
+dataMedianImpute$steps <- medianImpute
+
+
+groupedByDayImpute <- dataMedianImpute %>% group_by(date) %>% summarize (total = sum(steps, na.rm =TRUE))
+hist2<-ggplot(groupedByDayImpute, aes(total)) + geom_histogram()
+grid.arrange(hist1, hist2, ncol=2)
+
+##Impact is rather non existent
 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
+byInterlvalWeekend <-data %>% group_by(interval,weekend) %>% summarize(avg = mean(steps, na.rm=TRUE)) %>% arrange(desc(avg))
+line1<- ggplot(byInterlvalWeekend %>% filter(weekend), aes(interval, avg)) + geom_line() + ggtitle("Weekend") +
+   xlab("interval") + ylab("average steps")
+
+line2<- ggplot(byInterlvalWeekend %>% filter(!weekend), aes(interval, avg)) + geom_line() +ggtitle("Weekday") 
+   xlab("interval") + ylab("average steps")
+grid.arrange(line1, line2, nrow=2)
