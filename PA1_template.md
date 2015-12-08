@@ -1,10 +1,4 @@
----
-title: 'Reproducible Research: Peer Assessment 1'
-output:
-  html_document:
-    keep_md: yes
-  word_document: default
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
@@ -37,7 +31,7 @@ hist1
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
 
 ```r
 meanByTotalNumberOfStepsPerDay <- mean(groupedByDay$total, na.rm =TRUE)
@@ -64,7 +58,7 @@ ggplot(byInterlval, aes(interval, avg)) + geom_line() +
    xlab("interval") + ylab("average steps")
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 
 ```r
 FiveMinIntervalWithTheMaxNumberOfSteps <- byInterlval[1,]
@@ -99,7 +93,7 @@ grid.arrange(hist1, hist2, ncol=2)
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
 ```r
 meanByTotalNumberOfStepsPerDayImpute <- mean(groupedByDayImpute$total, na.rm =TRUE)
@@ -136,6 +130,6 @@ line2<- ggplot(byInterlvalWeekend %>% filter(!weekend), aes(interval, avg)) + ge
 grid.arrange(line1, line2, nrow=2)
 ```
 
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
 
 The steps taken on weekends between on intervals from 1000-2200 are higher than those on weekdays. See the section on both histograms between the vertical red lines.
